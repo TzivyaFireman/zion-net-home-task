@@ -1,0 +1,19 @@
+# Hidden build / planning
+.local/
+
+# Local agent config
+.claude/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build artifacts (belt-and-braces; each subfolder has its own .gitignore too)
+node_modules/
+__pycache__/
+.venv/
+venv/
+bin/
+obj/
