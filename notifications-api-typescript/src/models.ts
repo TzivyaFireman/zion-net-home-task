@@ -26,7 +26,7 @@ export class Notification {
     this.id = id;
     this.targetChannels = targetChannels;
     this.message = message;
-    this.status = this.status = NotificationStatus.PENDING;;
+    this.status = NotificationStatus.PENDING;
     this.createdAt = new Date();
     this.attempts = 0;
     this.lastAttemptAt = null;
