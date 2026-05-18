@@ -1,6 +1,7 @@
 import express from "express";
 import { seed, addNotification, getAll, findById } from "./storage.js";
 import { NotificationProcessor } from "./processor.js";
+import { NotificationStatus } from "./models.js";
 
 const app = express();
 app.use(express.json());
@@ -34,6 +35,9 @@ app.put("/notifications/:id", (req, res) => {
     return;
   }
   Object.assign(n, req.body);
+  if (req.body.message || req.body.targetChannels) {
+    n.status = NotificationStatus.PENDING;
+  }
   res.json(n);
 });
 

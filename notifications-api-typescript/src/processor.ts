@@ -35,7 +35,7 @@ export class NotificationProcessor {
   }
 
   sendAll(): void {
-    const pending = storage.getAll().filter((n) => n.status === NotificationStatus.PENDING);
+    const pending = storage.getAll().filter((n) => n.status === NotificationStatus.PENDING || n.status === NotificationStatus.RETRY_PENDING);
     for (const n of pending) {
       this.sendOne(n);
     }
