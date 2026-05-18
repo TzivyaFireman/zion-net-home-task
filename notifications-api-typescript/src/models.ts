@@ -3,17 +3,19 @@ export interface TargetChannel {
   value: string;
 }
 
-export const PENDING = "pending";
-export const PROCESSING = "processing";
-export const SENT = "sent";
-export const RETRY_PENDING = "retry_pending";
-export const FAILED = "failed";
+export const NotificationStatus = {
+  PENDING: "pending",
+  PROCESSING: "processing",
+  SENT: "sent",
+  RETRY_PENDING: "retry_pending",
+  FAILED: "failed",
+} as const;
 
 export class Notification {
   id: number;
   targetChannels: TargetChannel[];
   message: string;
-  status: string;
+  status: typeof NotificationStatus[keyof typeof NotificationStatus];
   createdAt: Date;
   attempts: number;
   lastAttemptAt: Date | null;
@@ -24,7 +26,7 @@ export class Notification {
     this.id = id;
     this.targetChannels = targetChannels;
     this.message = message;
-    this.status = PENDING;
+    this.status = this.status = NotificationStatus.PENDING;;
     this.createdAt = new Date();
     this.attempts = 0;
     this.lastAttemptAt = null;

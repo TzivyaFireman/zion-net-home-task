@@ -1,10 +1,4 @@
-import {
-  Notification,
-  PENDING,
-  PROCESSING,
-  SENT,
-  FAILED,
-} from "./models.js";
+import { Notification, NotificationStatus } from "./models.js";
 import * as storage from "./storage.js";
 import { send as sendEmail } from "./providers/emailProvider.js";
 import { send as sendSms } from "./providers/smsProvider.js";
@@ -12,13 +6,13 @@ import { send as sendPush } from "./providers/pushProvider.js";
 
 export class NotificationProcessor {
   sendOne(n: Notification): void {
-    n.status = PROCESSING;
+    n.status = NotificationStatus.PROCESSING;
     n.attempts++;
     n.lastAttemptAt = new Date();
 
     const target = n.targetChannels[0];
     if (!target) {
-      n.status = FAILED;
+      n.status = NotificationStatus.FAILED;
       n.lastError = "No target channels";
       return;
     }
@@ -31,17 +25,17 @@ export class NotificationProcessor {
     } else if (target.type === "push") {
       response = sendPush({ recipient: target.value, message: n.message });
     } else {
-      n.status = FAILED;
+      n.status = NotificationStatus.FAILED;
       n.lastError = "Unknown channel";
       return;
     }
 
-    n.status = SENT;
+    n.status = NotificationStatus.SENT;
     n.lastError = response.Message;
   }
 
   sendAll(): void {
-    const pending = storage.getAll().filter((n) => n.status === PENDING);
+    const pending = storage.getAll().filter((n) => n.status === NotificationStatus.PENDING);
     for (const n of pending) {
       this.sendOne(n);
     }

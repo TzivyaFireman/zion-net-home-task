@@ -1,9 +1,7 @@
 import {
   Notification,
   TargetChannel,
-  SENT,
-  FAILED,
-  RETRY_PENDING,
+  NotificationStatus,
 } from "./models.js";
 import { minSmsSegments } from "./segmenter.js";
 
@@ -38,7 +36,7 @@ export function seed(): void {
     [{ type: "email", value: "alice@example.com" }],
     "Welcome to the platform"
   );
-  n1.status = SENT;
+  n1.status = NotificationStatus.SENT;
   n1.attempts = 1;
   n1.lastAttemptAt = new Date();
   n1.lastError = "[email] accepted for delivery";
@@ -49,7 +47,7 @@ export function seed(): void {
     [{ type: "push", value: "device-abc" }],
     "Your ride is here"
   );
-  n3.status = FAILED;
+  n3.status = NotificationStatus.FAILED;
   n3.attempts = 1;
   n3.lastAttemptAt = new Date();
   n3.lastError = "[push] device token rejected";
@@ -70,7 +68,7 @@ export function seed(): void {
     ],
     "Order shipped"
   );
-  n5.status = RETRY_PENDING;
+  n5.status = NotificationStatus.RETRY_PENDING;
   n5.attempts = 2;
   n5.lastAttemptAt = new Date();
   n5.lastError = "[sms] temporary outage, retry later";
