@@ -15,6 +15,9 @@ export class NotificationProcessor {
       return;
     }
 
+    let hasPermanentFailure = false;
+    let hasTemporaryFailure = false;
+
     for (const target of n.targetChannels) {
       let response;
 
@@ -39,10 +42,24 @@ export class NotificationProcessor {
         return;
       }
 
+      if (response.Result === "PermanentFailure") {
+        hasPermanentFailure = true;
+      }
+
+      if (response.Result === "TemporaryFailure") {
+        hasTemporaryFailure = true;
+      }
+
       n.lastError = response.Message;
     }
 
-    n.status = NotificationStatus.SENT;
+    if (hasPermanentFailure) {
+      n.status = NotificationStatus.FAILED;
+    } else if (hasTemporaryFailure) {
+      n.status = NotificationStatus.RETRY_PENDING;
+    } else {
+      n.status = NotificationStatus.SENT;
+    }
   }
 
   sendAll(): void {
